@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Self-hosted brand faces. Both are licensed fonts, so the binaries are NOT in
+   the repo — drop them in `public/fonts/` (see public/fonts/README.md) and they
+   pick up automatically. Until then the stacks below fall back to Manrope and
+   Fraunces, which are metric-close siblings loaded from the CDN in index.html.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Monorope';
+  src: url('/fonts/Monorope-Variable.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Awesome Serif';
+  src: url('/fonts/AwesomeSerif-Variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Awesome Serif';
+  src: url('/fonts/AwesomeSerif-VariableItalic.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@theme {
+  /* ---- surfaces ---- */
+  --color-ink: #fafafa;
+  --color-ink-soft: #f5f5f7;
+  --color-panel: #f1f1f3;
+  --color-line: rgba(14, 14, 16, 0.08);
+  --color-line-strong: rgba(14, 14, 16, 0.14);
+
+  /* ---- text ---- */
+  --color-paper: #0e0e10;
+  --color-muted: #56565e;
+  --color-faint: #83838a;
+
+  /* ---- accent ---- */
+  --color-accent: #5850ec;
+  --color-accent-soft: #4235c7;
+  --color-accent-dim: rgba(88, 80, 236, 0.1);
+
+  /* ---- nav highlight: pulled from the hero sky, not the purple accent ---- */
+  --color-brand: #1d7ee6;
+  --color-brand-soft: #1567c2;
+  --color-brand-dim: rgba(29, 126, 230, 0.12);
+
+  /* ---- fonts: two families only — Monorope (UI) + Awesome Serif (display) ---- */
+  --font-sans: 'Monorope', 'Manrope', 'Switzer', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: 'Monorope', 'Manrope', 'Switzer', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: 'Monorope', 'Manrope', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: 'Awesome Serif', 'Fraunces', Georgia, serif;
+  --font-display: 'Awesome Serif', 'Fraunces', Georgia, serif;
+
+  /* ---- editorial type scale ---- */
+  --text-display: clamp(3rem, 3rem + 4vw, 7.5rem);
+  --text-h1: clamp(2.25rem, 2rem + 2.4vw, 4.25rem);
+  --text-h2: clamp(1.75rem, 1.6rem + 1.4vw, 2.75rem);
+  --text-h3: clamp(1.25rem, 1.15rem + 0.6vw, 1.625rem);
+
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-ink);
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  /* hairline focus ring, keyboard only */
+  :focus-visible {
+    outline: 1.5px solid var(--color-accent-soft);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* The custom cursor replaces the system pointer, but only once it has actually
+   mounted (fine pointers only) — otherwise touch users would lose their cursor
+   with nothing drawn in its place. */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor *,
+  html.has-custom-cursor a,
+  html.has-custom-cursor button {
+    cursor: none;
+  }
+}
+
+.font-serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

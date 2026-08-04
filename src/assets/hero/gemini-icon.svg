@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="23.1667" viewBox="0 0 24 23.1667" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Badge / Gemini / Icon" filter="url(#filter0_d_0_115)">
+<g clip-path="url(#clip0_0_115)">
+<path id="Badge / Gemini / Icon Shape" d="M12 1C12.2333 5.225 13.375 7.925 15.625 9.1C17.875 10.275 20.225 10.9333 22.8333 11C20.225 11.0667 17.875 11.725 15.625 12.9C13.375 14.075 12.2333 16.775 12 21C11.7667 16.775 10.625 14.075 8.375 12.9C6.125 11.725 3.775 11.0667 1.16667 11C3.775 10.9333 6.125 10.275 8.375 9.1C10.625 7.925 11.7667 5.225 12 1Z" fill="white"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d_0_115" x="0" y="-0.833334" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1"/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.22 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_115"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_115" result="shape"/>
+</filter>
+<clipPath id="clip0_0_115">
+<rect width="20" height="20" fill="white" transform="translate(2 0.166666)"/>
+</clipPath>
+</defs>
+</svg>

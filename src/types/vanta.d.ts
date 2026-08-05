@@ -3,10 +3,10 @@
  * the factory returns an effect handle whose `destroy()` tears down the WebGL
  * context — skipping it leaks a renderer per mount.
  */
-declare module 'vanta/dist/vanta.clouds2.min' {
+declare module 'vanta/dist/vanta.clouds.min' {
   export type VantaEffect = { destroy: () => void; resize?: () => void }
 
-  export type Clouds2Options = {
+  export type CloudsOptions = {
     el: HTMLElement
     THREE: unknown
     mouseControls?: boolean
@@ -18,17 +18,21 @@ declare module 'vanta/dist/vanta.clouds2.min' {
     backgroundColor?: number
     skyColor?: number
     cloudColor?: number
+    cloudShadowColor?: number
+    sunColor?: number
+    sunGlareColor?: number
+    sunlightColor?: number
     speed?: number
     texturePath?: string
   }
 
-  export type Clouds2Factory = (options: Clouds2Options) => VantaEffect
+  export type CloudsFactory = (options: CloudsOptions) => VantaEffect
 
   /**
    * The published file is a UMD bundle. Depending on the interop path the
    * default export is either the factory itself or a wrapper holding it, so the
    * consumer has to unwrap before calling.
    */
-  const CLOUDS2: Clouds2Factory | { default: Clouds2Factory }
-  export default CLOUDS2
+  const CLOUDS: CloudsFactory | { default: CloudsFactory }
+  export default CLOUDS
 }

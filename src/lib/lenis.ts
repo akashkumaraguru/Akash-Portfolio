@@ -30,11 +30,15 @@ export function useLenis() {
 }
 
 /** Jump to the top with no easing — used when a route change swaps the page. */
-export function scrollToTop() {
+/**
+ * Jumps by default — a route swap should land at the top, not animate there.
+ * `smooth` is for controls the reader actually pressed, like "Back to top".
+ */
+export function scrollToTop({ smooth = false }: { smooth?: boolean } = {}) {
   if (instance) {
-    instance.scrollTo(0, { immediate: true })
+    instance.scrollTo(0, smooth ? { duration: 1.4 } : { immediate: true })
   } else {
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' })
   }
 }
 

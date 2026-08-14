@@ -28,8 +28,15 @@ export function Nav() {
   const [activeId, setActiveId] = useState<string>(HOME_ID)
 
   useEffect(() => {
+    // The glass state carries white labels, so it only reads against a dark
+    // first screen. A hero declares itself dark with data-cursor-theme="light"
+    // — the same marker the cursor reads. Without one (no hero, or a hero on a
+    // light page) the nav starts solid, or the labels vanish into the page.
+    const hasDarkFirstScreen =
+      document.getElementById(HOME_ID)?.matches('[data-cursor-theme="light"]') ?? false
+
     function onScroll() {
-      setScrolled(window.scrollY > SOLID_AFTER_PX)
+      setScrolled(!hasDarkFirstScreen || window.scrollY > SOLID_AFTER_PX)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -82,15 +89,24 @@ export function Nav() {
           <motion.span
             layoutId="nav-active-pill"
             transition={PILL_SPRING}
-            className="absolute inset-0 rounded-full bg-brand-dim"
+            className={clsx(
+              'absolute inset-0 rounded-full',
+              scrolled ? 'bg-brand-dim' : 'bg-white/25',
+            )}
           />
         )}
         <span
           className={clsx(
-            'relative',
-            isActive
-              ? 'text-brand-soft'
-              : 'bg-gradient-to-b from-[#484848] via-[#0a0a0a] via-[55%] to-[#070707] bg-clip-text text-transparent transition-opacity hover:opacity-60',
+            'relative transition-colors',
+            // Over the hero video the plate is dark, so the ink gradient would
+            // disappear into it; the labels go white until the nav solidifies.
+            scrolled
+              ? isActive
+                ? 'text-brand-soft'
+                : 'bg-gradient-to-b from-[#484848] via-[#0a0a0a] via-[55%] to-[#070707] bg-clip-text text-transparent transition-opacity hover:opacity-60'
+              : isActive
+                ? 'text-white'
+                : 'text-white/80 hover:text-white',
           )}
         >
           {item.label}
@@ -131,10 +147,12 @@ export function Nav() {
         <nav
           aria-label="Sections"
           className={clsx(
-            'flex w-full max-w-[860px] items-center justify-between rounded-full border px-2 backdrop-blur-xl transition-[background-color,border-color,box-shadow,height] duration-500 lg:px-[7px]',
+            'flex w-full max-w-[860px] items-center justify-between rounded-full border px-2 backdrop-blur-2xl transition-[background-color,border-color,box-shadow,height] duration-500 lg:px-[7px]',
             scrolled
               ? 'h-[44px] border-line-strong bg-ink/95 shadow-[0_8px_24px_-12px_rgba(14,14,16,0.35)] lg:h-[50px]'
-              : 'h-[44px] border-[#d5d5d5] bg-black/[0.02] lg:h-[50px]',
+              // frosted over the hero video: a white veil with a bright rim,
+              // which is what actually reads as glass on a dark backdrop
+              : 'h-[44px] border-white/25 bg-white/10 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)] lg:h-[50px]',
           )}
         >
           {/* equal-width halves keep the avatar dead centre whatever the labels weigh */}
@@ -152,7 +170,10 @@ export function Nav() {
               <motion.span
                 layoutId="nav-active-pill"
                 transition={PILL_SPRING}
-                className="absolute -inset-1 rounded-full bg-brand-dim"
+                className={clsx(
+                  'absolute -inset-1 rounded-full',
+                  scrolled ? 'bg-brand-dim' : 'bg-white/25',
+                )}
               />
             )}
             <img
@@ -178,7 +199,10 @@ export function Nav() {
         <Container className="flex h-[64px] items-center justify-between">
           <button
             onClick={() => go(HOME_ID)}
-            className="flex size-9 items-center justify-center overflow-hidden rounded-full border border-line-strong"
+            className={clsx(
+              'flex size-9 items-center justify-center overflow-hidden rounded-full border transition-colors duration-500',
+              scrolled || open ? 'border-line-strong' : 'border-white/40',
+            )}
             aria-label="Back to home"
           >
             <img src={avatar} alt="" className="size-full scale-110 object-cover" />
@@ -189,13 +213,20 @@ export function Nav() {
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
           >
+            {/* dark bars vanish against the hero video until the bar solidifies */}
             <motion.span
               animate={{ rotate: open ? 45 : 0, y: open ? 6 : 0 }}
-              className="block h-px w-5 bg-paper"
+              className={clsx(
+                'block h-px w-5 transition-colors duration-500',
+                scrolled || open ? 'bg-paper' : 'bg-white',
+              )}
             />
             <motion.span
               animate={{ rotate: open ? -45 : 0, y: open ? -6 : 0 }}
-              className="block h-px w-5 bg-paper"
+              className={clsx(
+                'block h-px w-5 transition-colors duration-500',
+                scrolled || open ? 'bg-paper' : 'bg-white',
+              )}
             />
           </button>
         </Container>

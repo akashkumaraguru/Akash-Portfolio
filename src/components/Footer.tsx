@@ -1,6 +1,6 @@
 import { Container } from './Container'
 import { SOCIALS } from '../data/nav'
-import { scrollToId } from '../lib/lenis'
+import { scrollToTop } from '../lib/lenis'
 
 export function Footer() {
   return (
@@ -13,7 +13,12 @@ export function Footer() {
               {s.label}
             </a>
           ))}
-          <button onClick={() => scrollToId('home')} className="transition-colors hover:text-paper">
+          {/* Goes to the document top rather than a section id: the first
+              section on the page changes as the hero is reworked. */}
+          <button
+            onClick={() => scrollToTop({ smooth: true })}
+            className="transition-colors hover:text-paper"
+          >
             Back to top
           </button>
         </div>

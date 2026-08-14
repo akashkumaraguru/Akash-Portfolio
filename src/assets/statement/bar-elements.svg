@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1439.97" height="172.797" viewBox="0 0 1439.97 172.797" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Bar Elements" clip-path="url(#clip0_1159_6740)">
+<path id="Bar Shape Dark" d="M1439.97 0H57.599V115.198V172.797H115.198V115.198H1439.97V0Z" fill="var(--fill-0, black)"/>
+<path id="Bar Shape Light" d="M57.599 0H0V172.797H57.599V0Z" fill="var(--fill-0, white)"/>
+<path id="Bar Accent Strip" d="M1439.97 115.198H115.198V172.797H1439.97V115.198Z" fill="var(--fill-0, white)"/>
+</g>
+<defs>
+<clipPath id="clip0_1159_6740">
+<rect width="1439.97" height="172.797" fill="white"/>
+</clipPath>
+</defs>
+</svg>

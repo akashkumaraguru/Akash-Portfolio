@@ -38,7 +38,12 @@ export function StackedCaseStudy({
   const tags = (project.scope ?? project.tools).slice(0, MAX_TAGS)
 
   return (
-    <figure className="md:sticky md:top-0 md:grid md:h-screen md:place-content-center md:py-8">
+    // pt clears the fixed nav — the panel pins at top-0, so without it the card
+    // slides under the pill. pb keeps the same breathing room at the bottom.
+    // Aligned to start, not centred: the panel is a full screen tall, so
+    // centring a fixed-height card left slack that grew with the viewport —
+    // 152px of it at 1200px tall, all of it read as a gap under the heading.
+    <figure className="md:sticky md:top-0 md:grid md:h-screen md:content-start md:justify-center md:pt-[104px] md:pb-8">
       <button
         onClick={onOpen}
         aria-label={`View project — ${project.name}`}
@@ -46,7 +51,7 @@ export function StackedCaseStudy({
         // Fixed height, with the plate absorbing whatever the copy does not use.
         // Equal heights are what make one card land exactly on the last — uneven
         // ones leave the previous card's footer peeking out below.
-        className="group flex w-full flex-col bg-white text-left md:h-[min(780px,calc(100vh-4rem))] md:w-[min(1040px,calc(100vw-5rem))]"
+        className="group flex w-full flex-col bg-white text-left md:h-[min(760px,calc(100vh-9rem))] md:w-[min(1040px,calc(100vw-5rem))]"
       >
         {/* tinted plate — the artwork is inset in it, not bleeding off its edge.
             min-height keeps the artwork legible when a short laptop viewport
@@ -69,7 +74,7 @@ export function StackedCaseStudy({
 
           <h3
             className="max-w-[52ch] text-[clamp(1.2rem,0.85rem+1.2vw,2rem)] leading-[1.25] tracking-[-0.01em] text-paper"
-            style={{ fontFamily: 'var(--font-serif)' }}
+            style={{ fontFamily: 'var(--font-heading)' }}
           >
             {headline}
           </h3>

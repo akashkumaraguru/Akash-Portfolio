@@ -3,8 +3,8 @@ export const CONTACT_EMAIL = 'mailto:hello@akashkumaraguru.com'
 /**
  * Sections listed in the mobile menu.
  *
- * NOTE: only `home` and `work` are currently mounted in App.tsx — the sections
- * behind skills / events / philosophy / experience were removed. Their entries
+ * NOTE: only `home`, `work` and `skills` are currently mounted in App.tsx — the
+ * sections behind events / philosophy / experience were removed. Their entries
  * stay here so the menu matches the desktop pill; `scrollToId` no-ops on a
  * missing element, so the links are inert rather than broken until those
  * sections come back.
@@ -44,5 +44,3 @@ export const SOCIALS = [
   { label: 'Behance', href: 'https://www.behance.net/akashkumaraguru' },
 ]
 
-export const RESUME_HREF = '#'
-export const CALENDLY_HREF = '#'

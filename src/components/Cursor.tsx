@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion'
+import clsx from 'clsx'
 
 /** Elements opt in by setting data-cursor="Label" — the dot becomes that pill. */
 const CURSOR_ATTRIBUTE = 'data-cursor'
+/** Sections opt in by setting data-cursor-theme="light" to get a white dot. */
+const THEME_ATTRIBUTE = 'data-cursor-theme'
 /** Marks the document so CSS can hide the native pointer. */
 const ACTIVE_CLASS = 'has-custom-cursor'
 
-/** Loose enough to trail the pointer, tight enough to never feel laggy. */
-const FOLLOW_SPRING = { stiffness: 700, damping: 42, mass: 0.6 }
+/** Loose enough to glide behind the pointer without ever feeling laggy. */
+const FOLLOW_SPRING = { stiffness: 380, damping: 32, mass: 0.5 }
 
 /**
  * A dot that replaces the system pointer and swells into a labelled pill over
@@ -17,6 +20,7 @@ const FOLLOW_SPRING = { stiffness: 700, damping: 42, mass: 0.6 }
 export function Cursor() {
   const [enabled, setEnabled] = useState(false)
   const [label, setLabel] = useState<string | null>(null)
+  const [light, setLight] = useState(false)
   const [visible, setVisible] = useState(false)
   const [pressed, setPressed] = useState(false)
 
@@ -37,8 +41,10 @@ export function Cursor() {
       y.set(e.clientY)
       setVisible(true)
 
-      const target = e.target instanceof Element ? e.target.closest(`[${CURSOR_ATTRIBUTE}]`) : null
-      setLabel(target?.getAttribute(CURSOR_ATTRIBUTE) ?? null)
+      if (!(e.target instanceof Element)) return
+      setLabel(e.target.closest(`[${CURSOR_ATTRIBUTE}]`)?.getAttribute(CURSOR_ATTRIBUTE) ?? null)
+      // Dark sections mark themselves; everywhere else the dot stays ink.
+      setLight(e.target.closest(`[${THEME_ATTRIBUTE}="light"]`) !== null)
     }
     // mouseleave on the root element is the one reliable "pointer left the
     // viewport" signal; pointerleave on document also fires at frame boundaries.
@@ -75,7 +81,12 @@ export function Cursor() {
         layout
         animate={{ opacity: visible ? 1 : 0, scale: pressed ? 0.88 : 1 }}
         transition={{ layout: { duration: 0.28, ease: [0.16, 1, 0.3, 1] }, duration: 0.2 }}
-        className="flex items-center justify-center rounded-full bg-[#262626] text-white"
+        className={clsx(
+          'flex items-center justify-center rounded-full transition-colors duration-300',
+          // The label pill keeps its own dark plate whatever the section:
+          // it carries white text and has to read as a button, not a dot.
+          label || !light ? 'bg-[#262626] text-white' : 'bg-white text-[#0a0a0a]',
+        )}
       >
         <AnimatePresence mode="popLayout" initial={false}>
           {label ? (

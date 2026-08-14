@@ -30,6 +30,17 @@
   font-display: swap;
 }
 
+/* Unlike the two above this one IS in the repo — Oooh Baby is SIL OFL, so the
+   latin subset ships with it. It exists for one thing: the handwritten "Skills"
+   callout, which has to match the handwriting baked into the desktop shot. */
+@font-face {
+  font-family: 'Oooh Baby';
+  src: url('/fonts/oooh-baby-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* ---- surfaces ---- */
   --color-ink: #fafafa;
@@ -59,6 +70,8 @@
   --font-mono: 'Monorope', 'Manrope', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-serif: 'Awesome Serif', 'Fraunces', Georgia, serif;
   --font-display: 'Awesome Serif', 'Fraunces', Georgia, serif;
+  /* Handwritten callouts only — never body copy. */
+  --font-hand: 'Oooh Baby', 'Segoe Script', cursive;
 
   /* ---- editorial type scale ---- */
   --text-display: clamp(3rem, 3rem + 4vw, 7.5rem);

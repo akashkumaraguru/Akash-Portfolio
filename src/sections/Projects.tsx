@@ -7,7 +7,9 @@ import { LINE_GRID } from '../lib/textures'
 
 export function Projects() {
   return (
-    <section id="work" className="relative bg-white pt-32 pb-24 md:pb-0">
+    // Light top padding: the statement above already ends on ~220px of its own,
+    // so a full pt-32 here read as a gap rather than a section break.
+    <section id="work" className="relative bg-white pt-14 pb-24 md:pb-0">
       {/* Backdrop grid. First in DOM and with no z-index of its own: a negative
           z-index would drop it behind the section's own background, and giving
           the section `isolate` to fix that would make it the scroll container
@@ -30,7 +32,7 @@ export function Projects() {
 
       {/* The heading scrolls away, then each case study pins in turn — every
           panel lands on the same spot, so one replaces the next. */}
-      <div className="relative mt-16 grid gap-14 px-6 md:mt-6 md:gap-2 md:px-0">
+      <div className="relative grid gap-14 px-6 md:mt-6 md:gap-2 md:px-0">
         {CASE_STUDY_PROJECTS.map((project, i) => (
           <StackedCaseStudy
             key={project.id}

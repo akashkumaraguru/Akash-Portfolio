@@ -12,6 +12,8 @@ import { SkillTicker } from './sections/SkillTicker'
 import { Statement } from './sections/Statement'
 import { Projects } from './sections/Projects'
 import { Skills } from './sections/Skills'
+import { Meetups } from './sections/Meetups'
+import { About } from './sections/About'
 
 function App() {
   useLenis()
@@ -50,6 +52,8 @@ function App() {
         <Statement />
         <Projects />
         <Skills />
+        <Meetups />
+        <About />
       </main>
       <Footer />
     </>

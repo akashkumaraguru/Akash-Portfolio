@@ -5,6 +5,8 @@ import { NAV_SECTIONS, PILL_NAV, PILL_NAV_SPLIT, SOCIALS, type PillNavItem } fro
 import { scrollToId } from '../lib/lenis'
 import { Container } from './Container'
 import avatar from '../assets/hero/avatar.png'
+import navAvatar from '../assets/hero/nav-avatar.png'
+import arrowCta from '../assets/about/arrow-cta.svg'
 
 /**
  * The nav turns solid as soon as anything can pass beneath it — a tall
@@ -18,11 +20,77 @@ const SPY_ROOT_MARGIN = '-45% 0px -50% 0px'
 /** The hero. It owns the avatar in the centre of the pill, and it is where the page opens. */
 const HOME_ID = 'home'
 
-/** Shared by the label pill and the avatar halo so the highlight travels as one object. */
-const PILL_SPRING = { type: 'spring', stiffness: 380, damping: 32 } as const
+/** Drives the collapse between the full bar and the avatar-only one. */
+const NAV_SPRING = { type: 'spring', stiffness: 260, damping: 30 } as const
+
+/** Idle label: the frame's near-black vertical gradient, clipped to the text. */
+const LINK_TEXT =
+  'bg-gradient-to-b from-[#484848] via-[#0a0a0a] via-[55%] to-[#070707] bg-clip-text text-transparent'
+
+/** The active section's name, in the frame's blue gradient. */
+const ACTIVE_TEXT =
+  'bg-gradient-to-b from-[#2567ff] via-[#1d54d4] via-[50%] to-[#1542aa] bg-clip-text text-transparent'
+
+/** The frame's pill fill, shared by the Resume button and the About CTAs. */
+const CTA_FILL = 'linear-gradient(180deg, #484848 0%, #0a0a0a 55%, #070707 100%)'
+
+/** One link in the expanded bar. */
+function PillLink({
+  item,
+  activeId,
+  onGo,
+}: {
+  item: PillNavItem
+  activeId: string
+  onGo: (id: string) => void
+}) {
+  const isActive = 'id' in item && activeId === item.id
+  const className = clsx(
+    'shrink-0 whitespace-nowrap text-[15px] transition-opacity hover:opacity-60 xl:text-[17px]',
+    isActive ? ACTIVE_TEXT : LINK_TEXT,
+  )
+  const style = { fontFamily: 'var(--font-heading)' }
+
+  return 'href' in item ? (
+    <a href={item.href} className={className} style={style}>
+      {item.label}
+    </a>
+  ) : (
+    <button
+      onClick={() => onGo(item.id)}
+      aria-current={isActive ? 'true' : undefined}
+      className={className}
+      style={style}
+    >
+      {item.label}
+    </button>
+  )
+}
+
+/** The frame's 185×60 Resume pill, scaled to the site's nav height. */
+function ResumeButton() {
+  return (
+    // TODO: no resume file in the repo yet — inert until one is supplied.
+    <span
+      className="flex h-[44px] w-[136px] shrink-0 cursor-default items-center justify-center gap-2 rounded-[100px] p-2"
+      style={{ background: CTA_FILL }}
+    >
+      <span
+        className="text-[15px] leading-none text-white xl:text-[17px]"
+        style={{ fontFamily: 'var(--font-heading)' }}
+      >
+        Resume
+      </span>
+      <span className="grid size-7 shrink-0 place-content-center overflow-hidden rounded-full bg-[#fafaff]">
+        <img src={arrowCta} alt="" aria-hidden className="size-[8px]" />
+      </span>
+    </span>
+  )
+}
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const [moved, setMoved] = useState(false)
   const [open, setOpen] = useState(false)
   // starts on the hero, so the highlight opens on the centre avatar
   const [activeId, setActiveId] = useState<string>(HOME_ID)
@@ -36,7 +104,12 @@ export function Nav() {
       document.getElementById(HOME_ID)?.matches('[data-cursor-theme="light"]') ?? false
 
     function onScroll() {
-      setScrolled(!hasDarkFirstScreen || window.scrollY > SOLID_AFTER_PX)
+      const past = window.scrollY > SOLID_AFTER_PX
+      setScrolled(!hasDarkFirstScreen || past)
+      // Collapse tracks the scroll itself. `scrolled` cannot: it is forced true
+      // on a light hero so the labels stay legible, which would leave the bar
+      // collapsed before the page had moved at all.
+      setMoved(past)
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -77,116 +150,71 @@ export function Nav() {
     scrollToId(id)
   }
 
-  /** One pill link — a section jump or an outbound link. */
-  function renderLink(item: PillNavItem) {
-    const isActive = 'id' in item && activeId === item.id
-    const className =
-      'relative shrink-0 whitespace-nowrap rounded-full px-2 py-1 text-[13px] transition-colors lg:px-2.5 lg:text-[15px] xl:px-3 xl:text-[17px]'
-
-    const content = (
-      <>
-        {isActive && (
-          <motion.span
-            layoutId="nav-active-pill"
-            transition={PILL_SPRING}
-            className={clsx(
-              'absolute inset-0 rounded-full',
-              scrolled ? 'bg-brand-dim' : 'bg-white/25',
-            )}
-          />
-        )}
-        <span
-          className={clsx(
-            'relative transition-colors',
-            // Over the hero video the plate is dark, so the ink gradient would
-            // disappear into it; the labels go white until the nav solidifies.
-            scrolled
-              ? isActive
-                ? 'text-brand-soft'
-                : 'bg-gradient-to-b from-[#484848] via-[#0a0a0a] via-[55%] to-[#070707] bg-clip-text text-transparent transition-opacity hover:opacity-60'
-              : isActive
-                ? 'text-white'
-                : 'text-white/80 hover:text-white',
-          )}
-        >
-          {item.label}
-        </span>
-      </>
-    )
-
-    if ('href' in item) {
-      return (
-        <a key={item.label} href={item.href} className={className} style={{ fontFamily: 'var(--font-heading)' }}>
-          {content}
-        </a>
-      )
-    }
-
-    return (
-      <button
-        key={item.id}
-        onClick={() => go(item.id)}
-        aria-current={isActive ? 'true' : undefined}
-        className={className}
-        style={{ fontFamily: 'var(--font-heading)' }}
-      >
-        {content}
-      </button>
-    )
-  }
+  /** The bar collapses to the avatar as soon as the page has moved. */
+  const collapsed = moved
+  /** Which section's name rides beside the avatar once collapsed. */
+  const activeLabel = PILL_NAV.find((item) => 'id' in item && item.id === activeId)?.label ?? null
 
   return (
     <>
-      {/* Desktop floating pill nav */}
-      <header
-        className={clsx(
-          'fixed inset-x-0 z-50 hidden justify-center px-6 transition-[top] duration-500 lg:flex',
-          scrolled ? 'top-5' : 'top-9',
-        )}
-      >
-        <nav
+      {/* ---- Desktop pill: three states from the frame ----
+          default   full bar, every link plus the Resume CTA
+          scrolled  collapses to the avatar alone
+          in-section  the active section's name sits beside the avatar */}
+      <header className="fixed inset-x-0 top-6 z-50 hidden justify-center px-6 transition-[top] duration-500 lg:flex">
+        <motion.nav
+          layout
           aria-label="Sections"
-          className={clsx(
-            'flex w-full max-w-[860px] items-center justify-between rounded-full border px-2 backdrop-blur-2xl transition-[background-color,border-color,box-shadow,height] duration-500 lg:px-[7px]',
-            scrolled
-              ? 'h-[44px] border-line-strong bg-ink/95 shadow-[0_8px_24px_-12px_rgba(14,14,16,0.35)] lg:h-[50px]'
-              // frosted over the hero video: a white veil with a bright rim,
-              // which is what actually reads as glass on a dark backdrop
-              : 'h-[44px] border-white/25 bg-white/10 shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)] lg:h-[50px]',
-          )}
+          transition={NAV_SPRING}
+          // The frame is drawn at 86px tall; the whole bar is scaled to ~0.74 of
+          // that here. min-w is the frame's fixed collapsed width, scaled to match,
+          // so the avatar-only state stays a pill rather than shrinking to a circle.
+          className="flex h-[64px] min-w-[164px] items-center justify-center overflow-hidden rounded-[100px] border border-[#d5d5d5] bg-black/[0.02] px-[26px] backdrop-blur-2xl"
         >
-          {/* equal-width halves keep the avatar dead centre whatever the labels weigh */}
-          <div className="contents lg:flex lg:flex-1 lg:items-center lg:justify-between">
-            {PILL_NAV.slice(0, PILL_NAV_SPLIT).map(renderLink)}
-          </div>
+          <motion.div layout className="flex h-[44px] items-center justify-center gap-[30px]">
+            {!collapsed &&
+              PILL_NAV.slice(0, PILL_NAV_SPLIT).map((item) => (
+                <PillLink key={item.label} item={item} activeId={activeId} onGo={go} />
+              ))}
 
-          <button
-            onClick={() => go(HOME_ID)}
-            aria-label="Back to home"
-            aria-current={activeId === HOME_ID ? 'true' : undefined}
-            className="relative mx-2.5 size-[34px] shrink-0 rounded-full transition-transform duration-300 hover:scale-105 lg:size-[40px]"
-          >
-            {activeId === HOME_ID && (
-              <motion.span
-                layoutId="nav-active-pill"
-                transition={PILL_SPRING}
-                className={clsx(
-                  'absolute -inset-1 rounded-full',
-                  scrolled ? 'bg-brand-dim' : 'bg-white/25',
-                )}
-              />
+            {/* The active section's name, shown only once the bar has collapsed. */}
+            <AnimatePresence initial={false}>
+              {collapsed && activeLabel && (
+                <motion.span
+                  key={activeLabel}
+                  layout
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: 'auto' }}
+                  exit={{ opacity: 0, width: 0 }}
+                  transition={NAV_SPRING}
+                  className={clsx('overflow-hidden whitespace-nowrap text-[17px]', ACTIVE_TEXT)}
+                  style={{ fontFamily: 'var(--font-heading)' }}
+                >
+                  {activeLabel}
+                </motion.span>
+              )}
+            </AnimatePresence>
+
+            <motion.button
+              layout
+              onClick={() => go(HOME_ID)}
+              aria-label="Back to home"
+              aria-current={activeId === HOME_ID ? 'true' : undefined}
+              className="size-[52px] shrink-0 overflow-hidden rounded-full transition-transform duration-300 hover:scale-105"
+            >
+              <img src={navAvatar} alt="" className="size-full object-cover" />
+            </motion.button>
+
+            {!collapsed && (
+              <>
+                {PILL_NAV.slice(PILL_NAV_SPLIT).map((item) => (
+                  <PillLink key={item.label} item={item} activeId={activeId} onGo={go} />
+                ))}
+                <ResumeButton />
+              </>
             )}
-            <img
-              src={avatar}
-              alt=""
-              className="relative size-full scale-110 overflow-hidden rounded-full object-cover"
-            />
-          </button>
-
-          <div className="contents lg:flex lg:flex-1 lg:items-center lg:justify-between">
-            {PILL_NAV.slice(PILL_NAV_SPLIT).map(renderLink)}
-          </div>
-        </nav>
+          </motion.div>
+        </motion.nav>
       </header>
 
       {/* Mobile bar */}

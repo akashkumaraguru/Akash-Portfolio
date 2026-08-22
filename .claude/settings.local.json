@@ -55,7 +55,8 @@
       "Bash(curl -sf -o src/assets/projects/surf-seller-hub.png \"http://localhost:3845/assets/125e5cb45632d87c32ced4fd5141031449ea8a5e.png\")",
       "Bash(perl -0pi -e \"s|^export type Project = \\\\{|import surfSellerHub from '../assets/projects/surf-seller-hub.png'\\\\n\\\\nexport type Project = {|\" src/data/projects.ts)",
       "Bash(perl -0pi -e 's|^      \\\\{/\\\\* background line objects|        {/* background line objects|m; s|^      <img\\\\n        src=\\\\{lineObjects\\\\}|        <img\\\\n          src={lineObjects}|m' src/sections/Projects.tsx)",
-      "Bash(perl -0pi -e \"s|import \\\\{ useEffect, useState \\\\} from 'react'|import { useEffect, useMemo, useState } from 'react'|; s|    // chapters is derived from the project, so the project id is the real input\\\\n  \\\\}, \\\\[project.id, chapters.length\\\\]\\\\\\)|  }, [chapters]\\)|\" src/sections/ProjectCaseStudy.tsx)"
+      "Bash(perl -0pi -e \"s|import \\\\{ useEffect, useState \\\\} from 'react'|import { useEffect, useMemo, useState } from 'react'|; s|    // chapters is derived from the project, so the project id is the real input\\\\n  \\\\}, \\\\[project.id, chapters.length\\\\]\\\\\\)|  }, [chapters]\\)|\" src/sections/ProjectCaseStudy.tsx)",
+      "Bash(cd \"/Users/Akash/Akash- Design & Dev/Akash/Akash's portfolio\" && echo \"=== public/meetups tree ===\" && find public/meetups -type f | sort && echo && echo \"=== newest files in Downloads \\(last 2h\\) ===\" && find ~/Downloads -maxdepth 2 -type f \\\\\\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \\\\\\) -newermt \"-3 hours\" 2>/dev/null | head -20)"
     ]
   }
 }

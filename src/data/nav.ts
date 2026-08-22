@@ -29,9 +29,8 @@ export const PILL_NAV: PillNavItem[] = [
   { label: 'Skills.md', id: 'skills' },
   { label: 'Meetup Diary', id: 'events' },
   // ── avatar sits here ──
-  { label: 'Playground', id: 'philosophy' },
   { label: 'Who am I?', id: 'experience' },
-  { label: 'Contact me', href: CONTACT_EMAIL },
+  { label: 'Playground', id: 'philosophy' },
 ]
 
 /** Where the avatar breaks the link row in two. */
